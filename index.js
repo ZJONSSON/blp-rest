@@ -34,12 +34,13 @@ function getSession(options) {
 
 // Returns a promise when refData has been initialized
 function getRefdata(session) {
-  var p = clues.prototype.adapter.pending();
-  serviceID +=1;
+  var p = clues.prototype.adapter.pending(),
+      id = (serviceID+=1);
+
   session.openService('//blp/refdata', serviceID);
 
   function listener(m) {
-    if (m.correlations[0].value != serviceID) return;
+    if (m.correlations[0].value != id) return;
     session.removeListener('ServiceOpened',listener);
     p.fulfill(session);
   }
@@ -71,14 +72,15 @@ api.get_full_result = false;
 // or automatically solved from ticker and field
 
 api.refdata = function(session_refdata,inputs,get_full_result,resolve,error) {
-  var res = [];
-  reqID+=1;
+  var res = [],
+      id = (reqID+=1);
+
   // If inputs were provided directly, we need to parse and check for missing properties
   inputs = (typeof inputs === 'string') ? JSON.parse(inputs) : inputs;
 
   function listener(d) {
     // If this is an answer to a different reqID we move on
-    if (d.correlations[0].value != reqID) return;
+    if (d.correlations[0].value != id) return;
     // Check for responseError
     if (d.data.responseError) return error(d.data.responseError.message);
     // Cache the response in the res object
