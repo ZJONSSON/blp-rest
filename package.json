@@ -1,0 +1,23 @@
+{
+  "name": "blp-rest",
+  "version": "0.0.1",
+  "description": "Bloomberg RESTish API",
+  "license": "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+  "keywords": [
+    "finance",
+    "timeseries"
+  ],
+  "homepage": "https://github.com/ZJONSSON/blp-rest",
+  "author": {
+    "name": "Ziggy Jonsson",
+    "url": "https://github.com/ZJONSSON"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZJONSSON/blp-rest.git"
+  },
+  "dependencies": {
+    "blpapi": "0.1.x",
+    "clues" : "0.0.x"
+  }
+}
