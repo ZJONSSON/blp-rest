@@ -55,7 +55,7 @@ api = {};
 // This value will be static promise on the session object
 // after refdata has been initialized
 
-api.refdata = getSession(options).then(getRefdata);
+api.session_refdata = getSession(options).then(getRefdata);
 
 // Generates proper input object from ticker(s) and field(s)
 api.inputs = function(ticker,field) {
@@ -70,7 +70,7 @@ api.get_full_result = false;
 // This is the key request function.  Inputs can either be defined directly
 // or automatically solved from ticker and field
 
-api.get = function(refdata,inputs,get_full_result,resolve,error) {
+api.refdata = function(session_refdata,inputs,get_full_result,resolve,error) {
   var res = [];
   reqID+=1;
   // If inputs were provided directly, we need to parse and check for missing properties
@@ -88,7 +88,7 @@ api.get = function(refdata,inputs,get_full_result,resolve,error) {
     res.push(d.data.securityData[0]);
     // Final message will be labeled 'RESPONSE'
     if (d.eventType != 'RESPONSE') return;
-    refdata.removeListener('ReferenceDataResponse',listener);
+    session_refdata.removeListener('ReferenceDataResponse',listener);
     // Check for error in the message
     if (res[0].securityError) return error(res[0].securityError.message);
     if (res.length > 1 || get_full_result) return resolve(res);
@@ -99,8 +99,8 @@ api.get = function(refdata,inputs,get_full_result,resolve,error) {
     return resolve(res);
   }
 
-  refdata.request('//blp/refdata', 'ReferenceDataRequest',inputs,reqID);
-  refdata.on('ReferenceDataResponse',listener);
+  session_refdata.request('//blp/refdata', 'ReferenceDataRequest',inputs,reqID);
+  session_refdata.on('ReferenceDataResponse',listener);
 };
 
 // The export function returns a promise on the results
