@@ -9,13 +9,22 @@ var api = require("./index"),
     app = express();
 
 
-app.get("/blp/:fn", function(req,res,next) {
+function REST(req,res,next) {
    // Use first argument of the path as the function name
   var fn = req.param("fn");
+
+  // Merge req.params into req.query
+  Object.keys(req.params).forEach(function(key) {
+  	req.query[key] = req.params[key];
+  });
 
   return api(fn,req.query)
    .then(function(d) { res.end(JSON.stringify(d)); },
           function(d) { res.end(JSON.stringify(d)); });
-});
+};
+
+app.get("/blp/:fn/:ticker/:field",REST);
+app.get("/blp/:fn/:ticker",REST);
+app.get("/blp/:fn",REST);
 
 app.listen(3000);
