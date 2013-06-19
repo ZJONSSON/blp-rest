@@ -74,16 +74,13 @@ api.refdata = function(session_refdata,inputs,get_full_result,resolve,error) {
   var res = [];
   reqID+=1;
   // If inputs were provided directly, we need to parse and check for missing properties
-  if (typeof inputs === 'string') {
-    inputs = JSON.parse(inputs);
-    console.log(inputs,inputs.securities)
-    if (!inputs.securities || !inputs.securities.length) return error("Must specify securities as an array");
-    if (!inputs.fields || !inputs.fields.length) return error("Must specify fields as an array");
-  }
+  inputs = (typeof inputs === 'string') ? JSON.parse(inputs) : inputs;
 
   function listener(d) {
     // If this is an answer to a different reqID we move on
     if (d.correlations[0].value != reqID) return;
+    // Check for responseError
+    if (d.data.responseError) return error(d.data.responseError.message);
     // Cache the response in the res object
     res.push(d.data.securityData[0]);
     // Final message will be labeled 'RESPONSE'
